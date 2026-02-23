@@ -1,4 +1,24 @@
+import java.util.*;
+
 public class InvoiceFormatter {
-    // pointless wrapper (smell)
-    public static String identityFormat(String s) { return s; }
+
+    public String format(String invId, List<OrderLine> lines, Map<String, MenuItem> menu, InvoiceSummary summary) {;
+        StringBuilder out = new StringBuilder();
+        out.append("Invoice# ").append(invId).append("\n");
+
+        double subtotal = 0.0;
+        for (OrderLine l : lines) {
+            MenuItem item = menu.get(l.itemId);
+            double lineTotal = item.price * l.qty;
+            subtotal += lineTotal;
+            out.append(String.format("- %s x%d = %.2f\n", item.name, l.qty, lineTotal));
+        }
+
+        out.append(String.format("Subtotal: %.2f\n", summary.subtotal));
+        out.append(String.format("Tax(%.0f%%): %.2f\n", summary.taxPct, summary.tax));
+        out.append(String.format("Discount: -%.2f\n", summary.discount));
+        out.append(String.format("TOTAL: %.2f\n", summary.total));
+
+        return out.toString();
+    }
 }
