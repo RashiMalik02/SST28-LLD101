@@ -13,11 +13,11 @@ public class Main {
     }
 
     private static String safe(Exporter e, ExportRequest r) {
-        try {
-            ExportResult out = e.export(r);
-            return "OK bytes=" + out.bytes.length;
-        } catch (RuntimeException ex) {
-            return "ERROR: " + ex.getMessage();
+        ExportResult out = e.export(r);
+        String body = new String(out.bytes, java.nio.charset.StandardCharsets.UTF_8);
+        if ("application/pdf".equals(out.contentType) && body.startsWith("PDF cannot")) {
+            return "ERROR: " + body;
         }
+        return "OK bytes=" + out.bytes.length;
     }
 }
