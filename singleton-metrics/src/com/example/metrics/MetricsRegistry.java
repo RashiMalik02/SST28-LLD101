@@ -31,12 +31,19 @@ public class MetricsRegistry implements Serializable {
     // BROKEN: should be private and should prevent second construction
     public MetricsRegistry() {
         // intentionally empty
+        if (INSTANCE != null) {
+            throw new IllegalStateException("Singleton already initialized. Use getInstance().");
+        }
     }
 
     // BROKEN: racy lazy init; two threads can create two instances
     public static MetricsRegistry getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new MetricsRegistry();
+            synchronized (MetricsRegistry.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new MetricsRegistry();
+                }
+            }
         }
         return INSTANCE;
     }
@@ -58,4 +65,8 @@ public class MetricsRegistry implements Serializable {
     }
 
     // TODO: implement readResolve() to preserve singleton on deserialization
+    @Serial
+    private Object readResolve() {
+        return getInstance();
+    }
 }
