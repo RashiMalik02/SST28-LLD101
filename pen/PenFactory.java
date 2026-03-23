@@ -1,8 +1,5 @@
 public class PenFactory {
 
-    public enum PenType { INK, BALLPOINT, GEL }
-    public enum Cap { WITH_CAP, WITHOUT_CAP }
-
     public static Pen createPen(PenType penType, String color, Cap cap) {
         WriteStrategy writeStrategy = resolveWriteStrategy(cap);
 
