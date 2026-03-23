@@ -1,3 +1,3 @@
-public class PricingStrategy {
-    
+public interface PricingStrategy {
+    double calculatePrice(long hours);
 }
